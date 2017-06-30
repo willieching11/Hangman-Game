@@ -1,0 +1,56 @@
+.title {
+	font-family: starjedi;
+	font-size: 136px;
+	text-align: center;
+	margin-bottom: 0;
+	color: white;
+}
+
+.subtitle {
+	margin-top: 0;
+	font-size: 38px;
+	padding-right: 100px;
+	text-align: right;
+	font-family: thebully;
+	color: white;
+}
+
+.row {
+	color: white;
+	background-color: black;
+	border-top: 10px dotted #e5e5e5;
+	border-bottom: 10px dotted #e5e5e5;
+	box-shadow: inset 0 -1px 0 0 #e5e5e5, inset 0 1px 0 0 #e5e5e5, 0 1px 0 0 #e5e5e5, 0 -1px 0 0 #e5e5e5;
+	margin-bottom: 1px;
+}
+
+.left_panel {
+	text-align: center;
+	border-right: 10px dotted #fff;
+}
+
+.right_panel {
+	text-align: center;
+}
+
+p {
+	font-size: 36px;
+	font-family: inherit;
+    font-weight: 500;
+    line-height: 1.1;
+    color: inherit;
+}
+
+@font-face { 
+	font-family: starjedi; 
+	src: url('../fonts/star_jedi/starjout/Starjout.ttf'); 
+} 
+
+@font-face { 
+	font-family: thebully; 
+	src: url('../fonts/the_bully/The Bully_PersonalUseOnly.ttf'); 
+} 
+
+body {
+	background-image: url("../images/stars.jpg");
+}
