@@ -22,20 +22,51 @@ console.log(randWord);
 var image = "<a href='#'><img src='assets/images/film.jfif' width='500' height = '500'/></a>";
 
 
-for (var i = 0; i < randWord.length; i++) {
+for (var i = 0; i < randWord.length; i++) { //Makes a array with blank spaces to start game
   blankWord[i] = "_ ";
 }
 
 PrintPage();
       
-document.onkeyup = function(event) {
+document.onkeyup = function(event) { //key is pressed
   var pushed = event.key;
   var incorrectLetters = 0;
   var notGuessed = 0;
   var wrongLetter = 0;
   pushed = pushed.toUpperCase();
 
-  if (lettersGuessed[0] != null) {
+  for (var i = 0; i < randWord.length; i++) { //compares pressed key with each element in word
+    if (randWord[i] === pushed) {
+        blankWord[i] = pushed + " "; //if there is a match, pressed key is pushed into the i index of blank word
+        PrintPage();
+        CheckIfDone();
+    }
+    else {
+      incorrectLetters++;
+    }
+  }
+  num1 = 0;
+  if (incorrectLetters === randWord.length) {
+    for (var i = 0; i < lettersGuessed.length; i++) {
+      if (pushed === lettersGuessed[i]) {
+        break;
+      }
+      else {
+        num1++;
+      }
+    }
+    if (num1 === lettersGuessed.length) {
+      guessesRemaining--;
+    }
+    CheckIfDone();
+    PrintPage();
+  }
+
+  if (num1 !== lettersGuessed.length) {
+    return;
+  }
+
+  if (lettersGuessed[0] != null) { //needed to check if there is anything yet in array
     for (var i = 0; i < blankWord.length; i++) {
       if (pushed === blankWord[i]) {
         break;
@@ -47,8 +78,6 @@ document.onkeyup = function(event) {
       }
       else {
         notGuessed++;
-        console.log(notGuessed);
-        console.log(lettersGuessed.length);
       }
       if (notGuessed === lettersGuessed.length) {
         lettersGuessed.push(pushed);
@@ -68,22 +97,6 @@ document.onkeyup = function(event) {
     if (wrongLetter === randWord.length) {
       lettersGuessed.push(pushed);
     }
-    PrintPage();
-  }
-
-  for (var i = 0; i < randWord.length; i++) {
-    if (randWord[i] === pushed) {
-        blankWord[i] = pushed + " ";
-        PrintPage();
-        CheckIfDone();
-    }
-    else {
-      incorrectLetters++;
-    }
-  }
-  if (incorrectLetters === randWord.length) {
-    guessesRemaining--;
-    CheckIfDone();
     PrintPage();
   }
 }
