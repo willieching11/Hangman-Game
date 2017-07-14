@@ -1,6 +1,8 @@
 var wins = 0;
 var guessesRemaining = 12;
-var lettersGuessed = [];
+document.getElementById("wins").innerHTML = wins;
+document.getElementById("guessesRemaining").innerHTML = guessesRemaining;
+var incorrectLetters = [];
 var wordBank = ['TERMINATOR', 'GLADIATOR', 'TWILIGHT', 'CINDERELLA', 'FROZEN', 'INCEPTION', 'WATCHMEN', 'ALADDIN', 'ARMAGEDDON', 'RATATOUILLE', 'THOR']; //Create a list of possible words
 var images = [
   "<a href='#'><img src='assets/images/terminator.jpg' width='358' height = '500'/></a>",
@@ -15,139 +17,85 @@ var images = [
   "<a href='#'><img src='assets/images/ratatouille.jpg' width='358' height = '500'/></a>",
   "<a href='#'><img src='assets/images/thor.jpg' width='358' height = '500'/></a>"
   ];
-var randWord = wordBank[Math.floor(Math.random() * wordBank.length)]; //Chooses a random Word From a list
-var blankWord = new Array(randWord.length);
-console.log(randWord);
+var currentWord = wordBank[Math.floor(Math.random() * wordBank.length)]; //Chooses a random Word From a list
+var blankWord = [];
+console.log(currentWord);
 
 var image = "<a href='#'><img src='assets/images/film.jfif' width='500' height = '500'/></a>";
 
 
-for (var i = 0; i < randWord.length; i++) { //Makes a array with blank spaces to start game
+for (var i = 0; i < currentWord.length; i++) { //Makes a array with blank spaces to start game
   blankWord[i] = "_ ";
 }
-
-PrintPage();
-      
+document.getElementById("word").innerHTML = blankWord.join("");
+document.getElementById("image").innerHTML = image;
 document.onkeyup = function(event) { //key is pressed
-  var pushed = event.key;
-  var incorrectLetters = 0;
-  var notGuessed = 0;
-  var wrongLetter = 0;
-  pushed = pushed.toUpperCase();
-
-  for (var i = 0; i < randWord.length; i++) { //compares pressed key with each element in word
-    if (randWord[i] === pushed) {
-        blankWord[i] = pushed + " "; //if there is a match, pressed key is pushed into the i index of blank word
-        PrintPage();
-        CheckIfDone();
+  var pressed = event.key;
+  pressed = pressed.toUpperCase();
+  var misses = 0;
+  for (var i = 0; i < currentWord.length; i++) {
+    if (currentWord[i] === pressed) {
+      blankWord[i] = pressed;
+      document.getElementById("word").innerHTML = blankWord.join("");
     }
     else {
-      incorrectLetters++;
+      misses++;
     }
   }
-  num1 = 0;
-  if (incorrectLetters === randWord.length) {
-    for (var i = 0; i < lettersGuessed.length; i++) {
-      if (pushed === lettersGuessed[i]) {
+  if (misses === currentWord.length) {
+    var counter = 0;
+    for (var i = 0; i < incorrectLetters.length; i++) {
+      if (pressed === incorrectLetters[i]) {
         break;
       }
       else {
-        num1++;
+        counter++;
       }
     }
-    if (num1 === lettersGuessed.length) {
+    if (counter === incorrectLetters.length) {
+      incorrectLetters.push(pressed);
       guessesRemaining--;
-    }
-    CheckIfDone();
-    PrintPage();
-  }
-
-  if (num1 !== lettersGuessed.length) {
-    return;
-  }
-
-  if (lettersGuessed[0] != null) { //needed to check if there is anything yet in array
-    for (var i = 0; i < blankWord.length; i++) {
-      if (pushed === blankWord[i]) {
-        break;
-      }
-    }
-    for (var i = 0; i < lettersGuessed.length; i++) {
-      if (lettersGuessed[i] === pushed) {
-        break;
-      }
-      else {
-        notGuessed++;
-      }
-      if (notGuessed === lettersGuessed.length) {
-        lettersGuessed.push(pushed);
-        PrintPage();
-      }
+      document.getElementById("guessesRemaining").innerHTML = guessesRemaining;
+      document.getElementById("lettersGuessed").innerHTML = incorrectLetters;
     }
   }
-  else { 
-    for (var i = 0; i < randWord.length; i++) {
-      if (pushed === randWord[i]) {
-        break;
-      }
-      else {
-        wrongLetter++;
-      }
-    }
-    if (wrongLetter === randWord.length) {
-      lettersGuessed.push(pushed);
-    }
-    PrintPage();
-  }
+  checkIfDone();
 }
 
-function PrintPage() {//Prints out updated stats on screen
-  document.getElementById("blank").innerHTML = blankWord.join("");
-  document.getElementById("wins").innerHTML = wins;
-  document.getElementById("guessesRemaining").innerHTML = guessesRemaining;
-  document.getElementById("lettersGuessed").innerHTML = lettersGuessed.join(" ");
-  document.getElementById("image").innerHTML = image;
-}
-
-function CheckIfDone() { //Check if player won or lost
-  var correctLetters = 0;
-  for (var i = 0; i < randWord.length; i++){
+function checkIfDone() { //Check if player won or lost
+  var counter = 0;
+  for (var i = 0; i < blankWord.length; i++) {
     if (blankWord[i] === "_ ") {
       break;
-    } 
+    }
     else {
-      correctLetters++;
+      counter++;
     }
   }
-  if (correctLetters === randWord.length) {
-    var index = 0;
-    for (var i = 0; i < wordBank.length; i++) {
-      if (randWord != wordBank[i]) {
-        index++;
-      }
-      else {
-        image = images[index];
-      }
-    }
+  if (counter === blankWord.length) {
     wins++;
-    document.getElementById("wins").innerHTML = wins;
-    NewGame();
-  }
-  if (guessesRemaining === 0) {
-    alert('You Lost! :(');
-    NewGame();
+    for (var i = 0; i < wordBank.length; i++) {
+      if (wordBank[i] === currentWord) {
+        image = images[i];
+      }
+    }
+    newGame();
   }
 }
 
-function NewGame() { //Starts a New Game after a Win or loss
+function newGame() { //Starts a New Game after a Win or loss
   guessesRemaining = 12;
-  lettersGuessed = [];
-  randWord = wordBank[Math.floor(Math.random() * wordBank.length)]; //Chooses a random Word From a list
-  blankWord = new Array(randWord.length);
-
-  for (var i = 0; i < randWord.length; i++) {
+  incorrectLetters = [];
+  currentWord = wordBank[Math.floor(Math.random() * wordBank.length)];
+  blankWord = [];
+  for (var i = 0; i < currentWord.length; i++) {
     blankWord[i] = "_ ";
   }
+  console.log(currentWord);
 
-  PrintPage();
+  document.getElementById("wins").innerHTML = wins;
+  document.getElementById("word").innerHTML = blankWord.join("");
+  document.getElementById("guessesRemaining").innerHTML = guessesRemaining;
+  document.getElementById("lettersGuessed").innerHTML = incorrectLetters;
+  document.getElementById("image").innerHTML = image;
 }
